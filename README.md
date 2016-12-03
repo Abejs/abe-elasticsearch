@@ -28,6 +28,9 @@ If you don't provide an "index" value, the plugin will take the name of your pro
 Every time you publish a content, abe-elasticsearch will publish the whole document to Elasticsearch.
 Every time you unpublish a content, abe-elasticsearch will delete this content from Elasticsearch.
 
+The elasticsearch console : /abe/plugin/abe-elasticsearch/console
+It will display the number of indexed posts in Elasticsearch. You'll be able to launch a full index or reindex of your blog to elasticsearch.
+
 ### On your client
 Note: If you want to request Elasticsearch directly from the client, configure your config/elasticsearch.yml configuration file with:
 
