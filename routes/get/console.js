@@ -29,7 +29,7 @@ var route = function route(req, res, next, abe) {
   es.client.count({index: es.index},function(err,resp,status) {
     var htmlToSend = '';
 
-    var data = path.join(__dirname + '/../../partials/bulk.html')
+    var data = path.join(__dirname + '/../../partials/console.html')
     var html = abe.coreUtils.file.getContent(data);
 
     var template = abe.Handlebars.compile(html, {noEscape: true})
