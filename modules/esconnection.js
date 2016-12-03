@@ -2,8 +2,8 @@ var path = require('path')
 var elasticsearch = require('elasticsearch')
 
 function esclient (abe) {
-  var host = "localhost"
-  var port = 9200
+  let host = "localhost"
+  let port = 9200
   this.index = path.basename(abe.config.root)
 
   if(abe.config.elasticsearch){

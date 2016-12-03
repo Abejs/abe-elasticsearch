@@ -1,3 +1,4 @@
+'use strict'
 var path = require('path');
 var esconnection = require('../modules/esconnection');
 
@@ -43,7 +44,7 @@ var hooks = {
         id: path
       });
     }
-    
+
     return path;
   }
 };
