@@ -1,0 +1,14 @@
+{
+  "name": "abe-elasticsearch",
+  "version": "1.0.0",
+  "description": "This plugin will index elasticsearch with the json data on publish (and deindex on unpublish)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gregory Besson",
+  "license": "ISC",
+  "dependencies": {
+    "elasticsearch": "^12.1.0"
+  }
+}
