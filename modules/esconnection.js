@@ -3,8 +3,8 @@ var path = require('path')
 var elasticsearch = require('elasticsearch')
 
 function esclient (abe) {
-  let host = "localhost"
-  let port = 9200
+  var host = "localhost"
+  var port = 9200
   this.index = path.basename(abe.config.root)
 
   if(abe.config.elasticsearch){
@@ -15,7 +15,7 @@ function esclient (abe) {
   }
 
   this.client = new elasticsearch.Client({
-    host: host+':'+port,
+    host: host + ':' + port,
     log: 'error'
   })
 
