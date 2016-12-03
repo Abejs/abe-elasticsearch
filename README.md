@@ -4,10 +4,35 @@ Add search feature on your Abe frontend with Elasticsearch
 ##Introduction
 This plugin will index all you published content to Elasticsearch so that you can add a search feature to your static frontend !
 
-## Configuration
-You'll have to install Elasticsearch and configure its parameters in your abe.json file.
+## Pre-requisites
+Elasticsearch installed.
 
-Note: If you want to request Elasticsearch from the client, configure your config/elasticsearch.yml configuration file with:
+## Configuration
+Configure the Elasticsearch parameters in your abe.json file.
+
+```
+"elasticsearch":{
+  "active":"true",
+  "host": "127.0.0.1",
+  "port": "9200",
+  "index": "my_index"
+ }
+```
+
+you can deactivate this plugin by setting "active" to false
+If you don't provide an "index" value, the plugin will take the name of your project directory
+
+## How it works
+
+### On your Abe CMS
+Every time you publish a content, abe-elasticsearch will publish the whole document to Elasticsearch.
+Every time you unpublish a content, abe-elasticsearch will delete this content from Elasticsearch.
+
+The elasticsearch console : /abe/plugin/abe-elasticsearch/console
+It will display the number of indexed posts in Elasticsearch. You'll be able to launch a full index or reindex of your blog to elasticsearch.
+
+### On your client
+Note: If you want to request Elasticsearch directly from the client, configure your config/elasticsearch.yml configuration file with:
 
 ```
 http.cors.enabled : true
@@ -18,14 +43,4 @@ http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type, Content-Le
 
 ```
 
-## How it works
-
-### On your Abe CMS
-Every time you publish a content, abe-elasticsearch will publish the whole document to Elasticsearch.
-Every time you unpublish a content, abe-elasticsearch will delete this content from Elasticsearch.
-
-### On your client
-We provide 3 templates as examples:
-- One auto-complete template based on jquery
-- One auto-complete template based on react
-- One auto-complete template based on angular
+You'll find a specific recipe on this plugin here: https://github.com/gregorybesson/recipe-elasticsearch
