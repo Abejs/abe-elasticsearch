@@ -43,8 +43,6 @@ var route = function route(req, res, next, abe) {
     
     return res.send(tmp);
   });
-
-
 }
 
 exports.default = route
