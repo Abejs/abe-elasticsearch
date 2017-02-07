@@ -63,4 +63,4 @@ http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type, Content-Le
 
 ```
 
-You'll find a specific recipe on this plugin here: https://github.com/gregorybesson/recipe-elasticsearch
+You'll find a specific recipe on this plugin here: https://github.com/abecms/recipe-elasticsearch
