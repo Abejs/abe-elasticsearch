@@ -24,9 +24,9 @@ Configure the Elasticsearch parameters in your abe.json file.
  }
 ```
 
-you can deactivate this plugin by setting "active" to false
-If you don't provide an "index" value, the plugin will take the name of your project directory
-the attribute "templates" is optional. It's an array of templates you want to index. If a content is not related to one of these templates, it won't be indexed.
+- you can deactivate this plugin by setting "active" to false
+- If you don't provide an "index" value, the plugin will take the name of your project directory
+- the attribute "templates" is optional. It's an array of templates you want to index. If a content is not related to one of these templates, it won't be indexed.
 
 ## How it works
 
