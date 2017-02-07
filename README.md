@@ -11,6 +11,9 @@ Elasticsearch installed
 from your blog root directory:
 ```abe install abecms/abe-elasticsearch```
 
+If you want to install a specific github version:
+```abe install abecms/abe-elasticsearch#v1.0.0```
+
 You can also modify your abe.json config file:
 ```
   "plugins": [
