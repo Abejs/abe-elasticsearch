@@ -11,17 +11,28 @@ var hooks = {
       const template = result.abe_meta.template
       const content = abe.cmsData.file.get(revisionPath)
 
-      es.client.index({
-        index: es.index,
-        id: link,
-        type: template,
-        body: content
-      });
+      if(abe.config.elasticsearch.templates){
+        if(abe.config.elasticsearch.templates.indexOf(template) > -1) {
+          es.client.index({
+            index: es.index,
+            id: link,
+            type: template,
+            body: content
+          });
+        }
+      } else {
+        es.client.index({
+          index: es.index,
+          id: link,
+          type: template,
+          body: content
+        });
+      }
     }
 
     return result;
   },
-  afterUnpublish: function (path, json, abe) {
+  afterUnpublish: function (path, postPath, json, abe) {
     if(abe.config.elasticsearch && abe.config.elasticsearch.active){
       var es = new esconnection(abe)
       const link = json.abe_meta.link

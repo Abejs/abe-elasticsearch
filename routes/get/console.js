@@ -10,6 +10,7 @@ var route = function route(req, res, next, abe) {
   var es = new esconnection(abe)
 
   if(req.query.reindex === "true"){
+    es.client.indices.delete({index: es.index});
     var files = abe.Manager.instance.getListWithStatusOnFolder('publish')
     Array.prototype.forEach.call(files, (fileObj) => {
 
