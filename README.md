@@ -5,7 +5,21 @@ Add search feature on your Abe frontend with Elasticsearch
 This plugin will index all you published content to Elasticsearch so that you can add a search feature to your static frontend !
 
 ## Pre-requisites
-Elasticsearch installed.
+Elasticsearch installed
+
+## Installation
+from your blog root directory:
+```abe install abecms/abe-elasticsearch```
+
+You can also modify your abe.json config file:
+```
+  "plugins": [
+    "abecms/abe-elasticsearch"
+  ]
+```
+
+Then from your blog root directory:
+``` abe install ```
 
 ## Configuration
 Configure the Elasticsearch parameters in your abe.json file.
