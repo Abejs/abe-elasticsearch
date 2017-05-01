@@ -1,8 +1,10 @@
+> The version 2.x of this plugin needs an AbeCMS version > v3.0.0
+
 # abe-elasticsearch
 Add search feature on your Abe frontend with Elasticsearch
 
-##Introduction
-This plugin will index all you published content to Elasticsearch so that you can add a search feature to your static frontend !
+## Introduction
+This plugin will index all your published content to Elasticsearch so that you can add a search feature to your static frontend !
 
 ## Pre-requisites
 Elasticsearch installed
@@ -12,7 +14,7 @@ from your blog root directory:
 ```abe install abecms/abe-elasticsearch```
 
 If you want to install a specific github version:
-```abe install abecms/abe-elasticsearch#v1.0.0```
+```abe install abecms/abe-elasticsearch#v2.0.0```
 
 You can also modify your abe.json config file:
 ```
@@ -42,7 +44,7 @@ Configure the Elasticsearch parameters in your abe.json file.
 ```
 
 - you can deactivate this plugin by setting "active" to false
-- If you don't provide an "index" value, the plugin will take the name of your project directory
+- If you don't provide an "index" prefix value, the plugin will take the name of your project directory. Caution: This index is only a prefix used to be prepended to all the templates you want to index. In Elasticsearch, it's not possible to have 2 properties with the same name (like title for one template and title for another template) in a same index. Therefore, we need to create a specific index for each template. ie. my_index_index, my_index_post, ...
 - the attribute "templates" is optional. It's an array of templates you want to index. If a content is not related to one of these templates, it won't be indexed.
 
 ## How it works
@@ -51,7 +53,7 @@ Configure the Elasticsearch parameters in your abe.json file.
 Every time you publish a content, abe-elasticsearch will publish the whole document to Elasticsearch.
 Every time you unpublish a content, abe-elasticsearch will delete this content from Elasticsearch.
 
-The elasticsearch console : /abe/plugin/abe-elasticsearch/console
+The elasticsearch console : ```/abe/plugin/abe-elasticsearch/console```
 It will display the number of indexed posts in Elasticsearch. You'll be able to launch a full index or reindex of your blog to elasticsearch.
 
 ### On your client
