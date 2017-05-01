@@ -1,6 +1,6 @@
 'use strict'
-var path = require('path');
-var esconnection = require('../modules/esconnection');
+var path = require('path')
+var esconnection = require('../modules/esconnection')
 
 var hooks = {
   afterPublish: function (result, postPath, abe) {
@@ -13,16 +13,23 @@ var hooks = {
 
       if(abe.config.elasticsearch.templates){
         if(abe.config.elasticsearch.templates.indexOf(template) > -1) {
-          es.client.index({
-            index: es.index,
-            id: link,
-            type: template,
-            body: content
+          this.client.indices.create({  
+            index: this.index + '_' + template
+          },function(err,resp,status) {
+            if(err && err.statusCode !== 400) {
+              console.log(err);
+            }
+            es.client.index({
+              index: es.index + '_' + template,
+              id: link,
+              type: template,
+              body: content
+            });
           });
         }
       } else {
         es.client.index({
-          index: es.index,
+          index: es.index + '_' + template,
           id: link,
           type: template,
           body: content
@@ -38,8 +45,8 @@ var hooks = {
       const link = json.abe_meta.link
       const template = json.abe_meta.template
 
-      es.client.delete({
-        index: es.index,
+      var result = es.client.delete({
+        index: es.index + '_' + template,
         id: link,
         type: template
       });
@@ -51,7 +58,7 @@ var hooks = {
     if(abe.config.elasticsearch && abe.config.elasticsearch.active){
       var es = new esconnection(abe)
       es.client.delete({
-        index: es.index,
+        index: es.index + '_' + template,
         id: path
       });
     }
