@@ -27,9 +27,9 @@ var route = function route(req, res, next, abe) {
     manager: manager,
     config: abe.config
   }
-  const pathTemplate = path.join(abe.config.root, abe.config.templates.url)
+
   const extension = '.' + abe.config.files.templates.extension
-  let templates = abe.coreUtils.file.getFilesSync(pathTemplate, true, extension)
+  let templates = abe.coreUtils.file.getFilesSync(abe.Manager.instance.pathTemplates, true, extension)
 
   // if(es.error !== null){
   //   //nbIndexed: resp.count,
@@ -74,10 +74,15 @@ var route = function route(req, res, next, abe) {
   es.getIndices(templates, extension, function(indices){
     getWaiting--;
     if (getWaiting==0) {
-      es.client.count({index: indices.join()},function(err,resp,status) {
-        EditorVariables.nbIndexed = resp.count
-        res.render(path.join(__dirname + '/../../partials/console.html'), EditorVariables)
-      }.bind(this));
+      try{
+        es.client.count({index: indices.join()},function(err,resp,status) {
+          if(resp)
+            EditorVariables.nbIndexed = resp.count
+          res.render(path.join(__dirname + '/../../partials/console.html'), EditorVariables)
+        }.bind(this));
+      } catch(e){
+        console.error(e.stack)
+      }
     } 
   }.bind(this))
   
