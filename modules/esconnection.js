@@ -7,7 +7,7 @@ function esclient (abe) {
   var port = 9200
   this.index = path.basename(abe.config.root)
   this.error = null
-  this._pathTemplate = path.join(abe.config.root, abe.config.templates.url)
+  this._pathTemplate = abe.Manager.instance.pathTemplates
   this._extension = '.' + abe.config.files.templates.extension
 
   if(abe.config.elasticsearch){
