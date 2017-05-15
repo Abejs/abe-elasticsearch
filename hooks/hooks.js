@@ -6,14 +6,14 @@ var hooks = {
   afterPublish: function (result, postPath, abe) {
     if(abe.config.elasticsearch && abe.config.elasticsearch.active){
       var es = new esconnection(abe)
-      const revisionPath = path.join(abe.config.root, abe.config.data.url, result.abe_meta.publish.link.replace(`.${abe.config.files.templates.extension}`, '.json'))
+      const revisionPath = path.join(abe.config.root, abe.config.data.url, result.abe_meta.link.replace(`.${abe.config.files.templates.extension}`, '.json'))
       const link = result.abe_meta.link
       const template = result.abe_meta.template
       const content = abe.cmsData.file.get(revisionPath)
 
       if(abe.config.elasticsearch.templates){
         if(abe.config.elasticsearch.templates.indexOf(template) > -1) {
-          this.client.indices.create({  
+          es.client.indices.create({  
             index: this.index + '_' + template
           },function(err,resp,status) {
             if(err && err.statusCode !== 400) {
