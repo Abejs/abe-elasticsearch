@@ -1,5 +1,3 @@
-> The version 2.x of this plugin needs an AbeCMS version > v3.0.0
-
 # abe-elasticsearch
 Add search feature on your Abe frontend with Elasticsearch
 
@@ -44,7 +42,9 @@ Configure the Elasticsearch parameters in your abe.json file.
 ```
 
 - you can deactivate this plugin by setting "active" to false
-- If you don't provide an "index" prefix value, the plugin will take the name of your project directory. Caution: This index is only a prefix used to be prepended to all the templates you want to index. In Elasticsearch, it's not possible to have 2 properties with the same name (like title for one template and title for another template) in a same index. Therefore, we need to create a specific index for each template. ie. my_index_index, my_index_post, ...
+- If you don't provide an "index" prefix value, the plugin will take the name of your project directory. 
+
+- :point_up: Caution: This index is only a prefix used to be prepended to all the templates you want to index. In Elasticsearch, it's not possible to have 2 properties with the same name (like title for one template and title for another template) in a same index. Therefore, we need to create a specific index for each template. ie. my_index_index, my_index_post, ...
 - the attribute "templates" is optional. It's an array of templates you want to index. If a content is not related to one of these templates, it won't be indexed.
 
 ## How it works
