@@ -29,7 +29,13 @@ var route = function route(req, res, next, abe) {
   }
 
   const extension = '.' + abe.config.files.templates.extension
-  let templates = abe.coreUtils.file.getFilesSync(abe.Manager.instance.pathTemplates, true, extension)
+  let pathTemplates
+  if(typeof abe.Manager.instance.pathTemplates == 'undefined'){
+    pathTemplates = path.join(abe.config.root, abe.config.templates.url)
+  } else {
+    pathTemplates = abe.Manager.instance.pathTemplates
+  }
+  let templates = abe.coreUtils.file.getFilesSync(pathTemplates, true, extension)
 
   // if(es.error !== null){
   //   //nbIndexed: resp.count,
