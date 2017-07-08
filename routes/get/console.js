@@ -55,43 +55,63 @@ var route = function route(req, res, next, abe) {
           resetInit--;
           if (resetInit==0) {
             const files = abe.Manager.instance.getListWithStatusOnFolder('publish')
+            let arIndexedFiles = {}
+            let promises = []
+
             Array.prototype.forEach.call(files, (fileObj) => {
               const revisionPath = path.join(abe.config.root, abe.config.data.url, fileObj.abe_meta.link.replace(`.${abe.config.files.templates.extension}`, '.json'))
               const link = fileObj.abe_meta.link
               const template = fileObj.abe_meta.template
               const content = abe.cmsData.file.get(revisionPath)
               const index = es.index + '_' + template
+              
+              if(typeof arIndexedFiles[index] == 'undefined'){
+                arIndexedFiles[index] = {'count':1,'indexed':0}
+              } else {
+                arIndexedFiles[index].count += 1
+              }
+
               if(es.isInIndices(template)){
-                es.client.index({
+                var p = es.client.index({
                   index: index,
                   id: link,
                   type: template,
                   body: content
+                }).then(function(response){
+                  EditorVariables.nbIndexed += 1
+                  arIndexedFiles[index].indexed += 1
                 })
+                promises.push(p)
               }
+            })
+
+            Promise.all(promises)
+            .then(function() {
+              EditorVariables.arIndexedFiles = arIndexedFiles
+              res.render(path.join(__dirname + '/../../partials/console.html'), EditorVariables)
+              return
             })
           }
         })
       }
     })
+  } else {
+    let getWaiting = templates.length;
+    es.getIndices(templates, extension, function(indices){
+      getWaiting--;
+      if (getWaiting==0) {
+        try{
+          es.client.count({index: indices.join()},function(err,resp,status) {
+            if(resp)
+              EditorVariables.nbIndexed = resp.count
+            res.render(path.join(__dirname + '/../../partials/console.html'), EditorVariables)
+          }.bind(this));
+        } catch(e){
+          console.error(e.stack)
+        }
+      } 
+    }.bind(this))
   }
-
-  let getWaiting = templates.length;
-  es.getIndices(templates, extension, function(indices){
-    getWaiting--;
-    if (getWaiting==0) {
-      try{
-        es.client.count({index: indices.join()},function(err,resp,status) {
-          if(resp)
-            EditorVariables.nbIndexed = resp.count
-          res.render(path.join(__dirname + '/../../partials/console.html'), EditorVariables)
-        }.bind(this));
-      } catch(e){
-        console.error(e.stack)
-      }
-    } 
-  }.bind(this))
-  
 }
 
 exports.default = route

@@ -28,9 +28,16 @@
                   <div class="form-group">
                     <button onclick="location.href='?reindex=true'" class="btn btn-default">Index your blog with Elasticsearch</button>
                   </div>
+                  {{#each arIndexedFiles}}
+                    {{#if this.indexed}}
+                      <p style="background-color:#ff0"><strong>{{@key}}</strong>: {{this.count}} documents in ABE for {{this.indexed}} indexed in ES</p>
+                    {{else}}
+                      <p><strong>{{@key}}</strong>: {{this.count}} documents in ABE for {{this.indexed}} indexed in ES</p>
+                    {{/if}}
+                  {{/each}}
                   {{#if nbIndexed}}
-                  <br/>
-                  <div>{{nbIndexed}} documents have been indexed in Elasticsearch</div>
+                  <hr/>
+                  <h3>{{nbIndexed}} documents have been indexed in Elasticsearch</h3>
                   <br/>
                   {{/if}}
                   {{#if error}}

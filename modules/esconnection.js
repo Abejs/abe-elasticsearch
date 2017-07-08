@@ -17,12 +17,19 @@ function esclient (abe) {
     this.index = (elt.hasOwnProperty("index"))?elt.index:this.index
   }
 
+  if(port != ""){
+    host = host + ':' + port
+  }
   this.client = new elasticsearch.Client({
-    host: host + ':' + port,
+    host: host,
     log: 'error'
   })
 
   this.indices = []
+
+
+  // console.log('============= HOST ===============')
+  // console.log(host)
   // this.error = this.client.ping({
   //   requestTimeout: 3000,
   //   hello: "elasticsearch!"
@@ -33,6 +40,13 @@ function esclient (abe) {
   //   }
   // })
 
+  /**
+   * Check if an index already exist in elasticsearch
+   * @param  {[type]}   templates [description]
+   * @param  {[type]}   extension [description]
+   * @param  {Function} callback  [description]
+   * @return {[type]}             [description]
+   */
   this.getIndices = function(templates, extension, callback){
     Array.prototype.forEach.call(templates, function(template) {
       template = path.basename(template, extension)
@@ -45,32 +59,51 @@ function esclient (abe) {
       }.bind(this))
     }.bind(this))
   }
-  
+
   this.initIndices = function(templates, extension, callback){
     Array.prototype.forEach.call(templates, (template) => {
       template = path.basename(template,extension)
       if(this.isInIndices(template)){
+        const index = this.index + '_' + template
+        const conf = this.getConfig(template)
+        const settings = conf.settings
         this.client.indices.create({  
-          index: this.index + '_' + template
+          index: index,
+          body: conf.settings
         },function(err,resp,status) {
-          callback(resp)
-          if(err && err.statusCode !== 400) {
-            console.log(err);
-          } 
-        })
+          if(Object.keys(conf.mappings).length > 0 && conf.mappings.constructor === Object){
+            this.client.indices.putMapping({
+              index: index,
+              type: template,
+              body: conf.mappings
+            }, function(err, result){
+              callback(resp)
+            }.bind(this))
+          } else {
+            callback(resp)
+          }
+        }.bind(this))
       } else {
         callback(true)
       }
     })
   }
 
+  /**
+   * Delete existing indices in Elasticsearch
+   * @param  {[type]}   templates [description]
+   * @param  {[type]}   extension [description]
+   * @param  {Function} callback  [description]
+   * @return {[type]}             [description]
+   */
   this.resetIndices = function(templates, extension, callback){
     Array.prototype.forEach.call(templates, (template) => {
       template = path.basename(template,extension)
       const index = this.index + '_' + template
       this.client.indices.exists({ index : index, ignoreUnavailable: true }, function (err, exists) {
         if(exists === true){
-          this.client.indices.delete({index: index});
+          this.client.indices.delete({index: index}, function (err, result) {
+          }.bind(this));
         }
         callback(index)
       }.bind(this))
@@ -80,8 +113,8 @@ function esclient (abe) {
   this.isInIndices = function(template){
     if(abe.config.elasticsearch && abe.config.elasticsearch.active){
       if(abe.config.elasticsearch.templates){
-        if(abe.config.elasticsearch.templates.indexOf(template) > -1) {
-          return true
+        if(typeof abe.config.elasticsearch.templates[template] != 'undefined'){
+          return abe.config.elasticsearch.templates[template]
         }
       } else {
         return true
@@ -89,6 +122,31 @@ function esclient (abe) {
     }
 
     return false
+  }
+
+  this.getConfig = function(template){
+    let config = {
+      "settings": {
+        "index":{
+          "mapping":{
+            "ignore_malformed": true
+          }
+        }
+      },
+      "mappings": false
+    }
+    if(abe.config.elasticsearch && abe.config.elasticsearch.active){
+      if(abe.config.elasticsearch.templates){
+        if(typeof abe.config.elasticsearch.templates[template] != 'undefined'){
+          if (abe.config.elasticsearch.templates[template]['settings'])
+            config.settings = abe.config.elasticsearch.templates[template]['settings']
+          if (abe.config.elasticsearch.templates[template]['mappings'])
+            config.mappings = abe.config.elasticsearch.templates[template]['mappings']
+        }
+      }
+    }
+
+    return config
   }
 }
 

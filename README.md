@@ -33,19 +33,75 @@ Configure the Elasticsearch parameters in your abe.json file.
   "host": "127.0.0.1",
   "port": "9200",
   "index": "my_index",
-  "templates": [
-    "template-1",
-    "template-2",
-    "template-3"
-  ]
+  "templates": {
+      "template-1": {
+        "settings": {},
+        "mappings": {
+          "dynamic": "false",
+          "properties": {
+            "abe_meta": {
+              "type": "object",
+              "properties": {
+                "link": {
+                  "type": "text",
+                  "index": "not_analyzed"
+                }
+              }
+            },
+            "title": {
+              "type": "text"
+            },
+            "name": {
+              "type": "text"
+            }
+          }
+        }
+      },
+      "template-2": {
+        "settings": {},
+        "mappings": {
+          "dynamic": "false",
+          "properties": {
+            "abe_meta": {
+              "type": "object",
+              "properties": {
+                "link": {
+                  "type": "text",
+                  "index": "not_analyzed"
+                }
+              }
+            },
+            "title": {
+              "type": "text"
+            }
+          }
+        }
+      }
+    }
+  }
  }
 ```
 
 - you can deactivate this plugin by setting "active" to false
 - If you don't provide an "index" prefix value, the plugin will take the name of your project directory. 
 
-- :point_up: Caution: This index is only a prefix used to be prepended to all the templates you want to index. In Elasticsearch, it's not possible to have 2 properties with the same name (like title for one template and title for another template) in a same index. Therefore, we need to create a specific index for each template. ie. my_index_index, my_index_post, ...
-- the attribute "templates" is optional. It's an array of templates you want to index. If a content is not related to one of these templates, it won't be indexed.
+- :point_up: Caution: This index is only a prefix used to be prepended to all the templates you want to index. In Elasticsearch, it's not possible to have 2 properties with the same name (like title for one template and title for another template) in a same index with different types. Therefore, we need to create a specific index for each template. ie. my_index_article, my_index_post, ...
+- the attribute "templates" is optional. It's a json of templates you want to index. If a content is not related to one of these templates, it won't be indexed. You may define specific settings (see ElasticSearch for details) for one template (== one index in ElasticSearch). And you may define a specific mapping (like in the example).
+If you don't define a mapping for your template/index, Elastic can encounter problems trying to figure it out by itself (but it works often).
+In this case, you could define a template/index this way:
+```
+"elasticsearch":{
+  "active":"true",
+  "host": "127.0.0.1",
+  "port": "9200",
+  "index": "my_index",
+  "templates": {
+    "template-1": {}
+  }
+```
+
+As an advice, if you define a mapping for your template/index, add ```"dynamic": "false"``` to your mapping so that ElasticSearch don't try to add additional fields dynamically.
+
 
 ## How it works
 

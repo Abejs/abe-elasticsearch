@@ -12,7 +12,7 @@ var hooks = {
       const content = abe.cmsData.file.get(revisionPath)
 
       if(abe.config.elasticsearch.templates){
-        if(abe.config.elasticsearch.templates.indexOf(template) > -1) {
+        if(typeof abe.config.elasticsearch.templates[template] != 'undefined') {
           es.client.indices.create({  
             index: this.index + '_' + template
           },function(err,resp,status) {
